@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+	<JobDef>
+		<defName>HaulToDigitalGeneLab</defName>
+		<driverClass>ReimaginedGenetics.JobDriver_InsertIngredientsToCell</driverClass>
+		<reportString>inserting ingredients on TargetA.</reportString>
+		<allowOpportunisticPrefix>true</allowOpportunisticPrefix>
+	</JobDef>
+</Defs>

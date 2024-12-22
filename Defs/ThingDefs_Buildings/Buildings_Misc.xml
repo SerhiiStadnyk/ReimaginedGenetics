@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  
+  <ThingDef Name="TestBuildingBase" ParentName="BuildingBase" Abstract="True">
+    <researchPrerequisites>
+      <li>Xenogermination</li>
+    </researchPrerequisites>
+    <altitudeLayer>Building</altitudeLayer>
+    <designationCategory>Biotech</designationCategory>
+    <uiOrder>2100</uiOrder>
+    <pathCost>42</pathCost>
+    <building>
+      <ai_chillDestination>false</ai_chillDestination>
+      <buildingTags>
+        <li>Biotech</li>
+      </buildingTags>
+    </building>
+    <placeWorkers>
+      <li>PlaceWorker_ShowFacilitiesConnections</li>
+    </placeWorkers>
+    <drawPlaceWorkersWhileSelected>true</drawPlaceWorkersWhileSelected>
+    <comps>
+      <li Class="CompProperties_Forbiddable"/>
+    </comps>
+  </ThingDef>
+
+  <ThingDef ParentName="TestBuildingBase">
+    <defName>DigitalGeneLab</defName>
+    <label>digital gene lab</label>
+    <description>A workbench for creating implantable xenogerms from genepacks stored in nearby gene banks. Genepacks are not consumed in this process and can be reused.</description>
+    <!--
+	<thingClass>RimworldTest.Building_Test</thingClass>
+	-->
+    <passability>PassThroughOnly</passability>
+    <castEdgeShadows>true</castEdgeShadows>
+    <fillPercent>0.4</fillPercent>
+    <graphicData>
+      <texPath>Things/Building/Misc/GeneAssembler/GeneAssembler</texPath>
+      <graphicClass>Graphic_Multi</graphicClass>
+      <drawSize>(3, 2)</drawSize>
+      <shadowData>
+        <volume>(2.55, 0.75, 1.7)</volume>
+      </shadowData>
+    </graphicData>
+    <descriptionHyperlinks>
+      <ThingDef>GeneBank</ThingDef>
+      <ThingDef>GeneProcessor</ThingDef>
+      <ThingDef>Genepack</ThingDef>
+      <ThingDef>Xenogerm</ThingDef>
+    </descriptionHyperlinks>
+    <tickerType>Normal</tickerType>
+    <size>(3, 2)</size>
+    <hasInteractionCell>true</hasInteractionCell>
+    <interactionCellOffset>(0, 0, 2)</interactionCellOffset>
+    <defaultPlacingRot>South</defaultPlacingRot>
+    <canOverlapZones>false</canOverlapZones>
+    <statBases>
+      <MaxHitPoints>500</MaxHitPoints>
+      <WorkToBuild>12000</WorkToBuild>
+      <Mass>35</Mass>
+      <Flammability>0.5</Flammability>
+      <AssemblySpeedFactor>1.0</AssemblySpeedFactor>
+    </statBases>
+    <costList>
+      <Steel>200</Steel>
+      <ComponentIndustrial>4</ComponentIndustrial>
+    </costList>
+    <constructionSkillPrerequisite>4</constructionSkillPrerequisite>
+    <comps>
+	  <li Class="ReimaginedGenetics.CompProperties_GenepackAnalyzer"/>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <basePowerConsumption>100</basePowerConsumption>
+        <idlePowerDraw>25</idlePowerDraw>
+      </li>
+      <li Class="CompProperties_Flickable"/>
+      <li Class="CompProperties_AffectedByFacilities">
+        <linkableFacilities>
+          <li>GeneBank</li>
+          <li>GeneProcessor</li>
+        </linkableFacilities>
+      </li>
+    </comps>
+  </ThingDef>
+
+</Defs>

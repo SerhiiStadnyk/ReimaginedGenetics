@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+	<name>Reimagined Genetics</name>
+	<author>Libmort</author>
+	<packageId>libmort.reimaginedgenetics</packageId>
+	<modDependencies>
+		<li>
+			<packageId>libmort.reimaginedfoundation</packageId>
+			<displayName>Reimagined Foundations</displayName>
+			<!--
+			<steamWorkshopUrl>https://steamcommunity.com/sharedfiles/filedetails/?id=</steamWorkshopUrl>
+			<downloadUrl>https://github.com/</downloadUrl>
+			-->
+		</li>
+	</modDependencies>
+	<supportedVersions>
+		<li>1.5</li>
+	</supportedVersions>
+	<description>
+	</description>
+</ModMetaData>

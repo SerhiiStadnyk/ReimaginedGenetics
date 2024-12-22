@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>	
+<!--
+	<WorkGiverDef>
+		<defName>AnalyzeAtDigitalGeneLab</defName>
+		<label>analyze genepack</label>
+		<giverClass>RimworldTest.WorkGiver_HaulToDigitalGeneLab</giverClass>
+		<workType>Research</workType>
+		<priorityInType>200</priorityInType>
+		<verb>researching</verb>
+		<gerund>researching at</gerund>
+		<requiredCapacities>
+			<li>Manipulation</li>
+		</requiredCapacities>
+		<prioritizeSustains>true</prioritizeSustains>
+		<canBeDoneByMechs>false</canBeDoneByMechs>
+	</WorkGiverDef>
+	-->
+	
+	<WorkGiverDef ParentName="HaulToBase">
+		<defName>HaulToDigitalGeneLab</defName>
+		<label>haul genepack to analyzer</label>
+		<giverClass>ReimaginedGenetics.WorkGiver_HaulToDigitalGeneLab</giverClass>
+	</WorkGiverDef>
+</Defs>
