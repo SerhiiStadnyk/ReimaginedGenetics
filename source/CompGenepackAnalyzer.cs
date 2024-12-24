@@ -23,22 +23,12 @@ namespace ReimaginedGenetics
 
         public override bool CanReceiveThings => !_isAnalyzing;
 
-        protected override void OnThingHauledInternal(ThingCount ingredient)
+        protected override void OnThingHauledInternal(Thing thing)
         {
-            base.OnThingHauledInternal(ingredient);
-            InsertGenepack(ingredient);
-        }
+            base.OnThingHauledInternal(thing);
 
-        protected override void OnAllThingsHauled()
-        {
-            base.OnAllThingsHauled();
-            StartAnalyzing();
-        }
-
-        // TOGO: No need to check it with each item inserted, move check into StartAnalyzing()
-        private void InsertGenepack(ThingCount ingredient) 
-        {
-            Genepack genepack = ingredient.Thing as Genepack;
+            // TODO: No need to check it with each item inserted, move check into StartAnalyzing()
+            Genepack genepack = thing as Genepack;
             if (genepack != null)
             {
                 if (_insertedGenepack == null)
@@ -46,6 +36,12 @@ namespace ReimaginedGenetics
                     _insertedGenepack = genepack;
                 }
             }
+        }
+
+        protected override void OnRequirementSatisfied()
+        {
+            base.OnRequirementSatisfied();
+            StartAnalyzing();
         }
 
         // TODO: Needs complete rework
@@ -106,88 +102,34 @@ namespace ReimaginedGenetics
             _isAnalyzing = true;
         }
 
-        public override void Initialize(CompProperties props)
-        {
-            base.Initialize(props);
-            Log.Message("Initialize");
-        }
+        //public override void Initialize(CompProperties props)
+        //{
+        //    base.Initialize(props);
+        //    Log.Message("Initialize");
+        //}
 
-        public override void PostSpawnSetup(bool respawningAfterLoad)
-        {
-            base.PostSpawnSetup(respawningAfterLoad);
-            Log.Message($"PostSpawnSetup {respawningAfterLoad}");
-        }
+        //public override void PostSpawnSetup(bool respawningAfterLoad)
+        //{
+        //    base.PostSpawnSetup(respawningAfterLoad);
+        //    Log.Message($"PostSpawnSetup {respawningAfterLoad}");
+        //}
 
-        public override void PostDeSpawn(Map map)
-        {
-            base.PostDeSpawn(map);
-            Log.Message($"PostDeSpawn {map.ToString()}");
-        }
-
-        public override ThingCount GetRequestedThing()
-        {
-            foreach (var pair in _expectedThings)
-            {
-                Thing thing = FindThing(pair.Key);
-                if (thing != null) 
-                {
-                    if (!_insertedThings.ContainsKey(pair.Key))
-                    {
-                        return new ThingCount(thing, pair.Value);
-                    }
-                    else if (_insertedThings[pair.Key].Count < pair.Value)
-                    {
-                        int requiredCount = pair.Value - _insertedThings[pair.Key].Count;
-                        return new ThingCount(thing, requiredCount);
-                    }
-                }
-            }
-
-            return null;
-        }
-
-        public override List<ThingCount> GetRequestedThings()
-        {
-            List<ThingCount> requestedThings = new List<ThingCount>();
-
-            foreach (var pair in _expectedThings)
-            {
-                Thing thing = FindThing(pair.Key);
-                if (thing != null)
-                {
-                    if (!_insertedThings.ContainsKey(pair.Key))
-                    {
-                        requestedThings.Add(new ThingCount(thing, pair.Value));
-                    }
-                    else if (_insertedThings[pair.Key].Count < pair.Value)
-                    {
-                        int requiredCount = pair.Value - _insertedThings[pair.Key].Count;
-                        requestedThings.Add(new ThingCount(thing, requiredCount));
-                    }
-                }
-            }
-
-            return requestedThings;
-        }
-
-        private Thing FindThing(ThingDef thingDef) 
-        {
-            Thing thing = parent.Map.listerThings.AllThings
-                .FirstOrDefault(x =>
-                    x.def.defName == thingDef.defName &&
-                    !x.IsForbidden(Faction.OfPlayer));
-            return thing;
-        }
+        //public override void PostDeSpawn(Map map)
+        //{
+        //    base.PostDeSpawn(map);
+        //    Log.Message($"PostDeSpawn {map.ToString()}");
+        //}
 
         protected void RequestThings() 
         {
+            Log.Warning("RequestThings");
             _expectedThings = new Dictionary<ThingDef, int>(2)
             {
                 { ThingDefOf.Genepack, 1 },
-                { InternalDefOf.Neutroamine, 10 }
+                { InternalDefOf.Neutroamine, 250 }
             };
 
-            _insertedThings = new Dictionary<ThingDef, ThingCount>(2);
+            _insertedThings = new Dictionary<ThingDef, Thing>(2);
         }
 
         public override IEnumerable<Gizmo> CompGetGizmosExtra()
@@ -202,6 +144,7 @@ namespace ReimaginedGenetics
 
             if (!Prefs.DevMode)
             {
+                // Finish analyzing
                 yield break;
             }
         }
@@ -216,8 +159,10 @@ namespace ReimaginedGenetics
                 isActive = () => _autoAnalyze,
                 toggleAction = delegate
                 {
-                    _autoAnalyze = !_autoAnalyze;
-                    RequestThings();
+                    if (_autoAnalyze = !_autoAnalyze) 
+                    {
+                        RequestThings();
+                    }
                 }
             };
         }
@@ -231,26 +176,20 @@ namespace ReimaginedGenetics
                 icon = CancelLoadingIcon,
                 action = delegate
                 {
-                    StopAnalyzing();
+                    Reset();
                 }
             };
         }
 
-        private void StopAnalyzing() 
+        protected override void Reset()
         {
-            foreach (var itemCountPair in _insertedThings)
-            {
-                Thing thingInstance = GenSpawn.Spawn(itemCountPair.Value.Thing, parent.Position, parent.Map, default(Rot4));
-                thingInstance.stackCount = itemCountPair.Value.Count;
-            }
+            base.Reset();
 
+            Log.Warning("Override Reset");
             _insertedGenepack = null;
-            _expectedThings.Clear();
-            _insertedThings.Clear();
-
             _isAnalyzing = false;
 
-            if (_autoAnalyze) 
+            if (_autoAnalyze)
             {
                 RequestThings();
             }
